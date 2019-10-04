@@ -53,7 +53,12 @@
                 <td>
                     <select-category :categories="categories" :id.sync="note.category_id"></select-category>
                 </td>
-                <td><input type="text" class="form-control" v-model="note.note"></td>
+                <td>
+                    <input type="text" class="form-control" v-model="note.note">
+                    <ul v-if="errors.length" class="text-danger">
+                        <li v-for="error in errors">@{{ error  }}</li>
+                    </ul>
+                </td>
                 <td><a href="" @click.prevent="mUpdate()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a></td>
             </template>
         </tr>
