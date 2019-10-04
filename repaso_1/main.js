@@ -8,6 +8,38 @@ function findById(items, id){
     return null;
 }
 
+Vue.filter('category', function (id) {
+    var category = findById(this.categories, id);
+    return (category === null) ? 'Sin categoria' : category.name;
+});
+
+Vue.component('select-category', {
+    template: '#select_category_tpl',
+    props: ['categories', 'id']
+});
+
+Vue.component('note-row', {
+    template: '#note_row_tpl',
+    props: ['categories', 'note'],
+    data: function(){
+        return {
+            editing: false
+        };
+    },
+    methods: {
+        mDelete: function(){
+            this.$parent.notes.$remove(this.note)
+        },
+        mEdit: function(){
+            this.editing = true;
+        },
+        mUpdate: function(){
+            this.editing = false;
+        }
+    }
+});
+
+
 var vm = new Vue({
     el: 'body',
     data: {
@@ -29,30 +61,21 @@ var vm = new Vue({
                 category_id : 3
             },
         ],
-
+        new_note : {
+            note: '',
+            category_id: ''
+        },
         categories: [
             {id: 1, name: 'Laravel'},
             {id: 2, name: 'Vue.js'},
             {id: 3, name: 'Publicidad'},
         ]
     },
-    filters : {
-        category: function (id) {
-            var category = findById(this.categories, id);
-            return (category === null) ? 'Sin categoria' : category.name;
-        }
-    },
+    filters : { },
     methods: {
-        deleteNote: function(note){
-            this.notes.$remove(note)
-        },
-        editNote: function(note){
-            Vue.set(note, 'editing', true);
-        },
-        updateNote: function(note){
-            note.editing = false;
+        createNote: function(){
+            this.notes.push(this.new_note);
+            this.new_note = { note: '', category_id : ''};
         }
     }
-
-
 });
