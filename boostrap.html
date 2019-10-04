@@ -10,7 +10,7 @@
     <div id="container" class="container">
 
         <template v-if="name">
-            <h1>{{ welcome_message }}, {{ name }}</h1>
+            <h1>{{ welcome_message }}, {{ name | ucwords }}</h1>
             <hr>
         </template>
 
@@ -34,16 +34,24 @@
                 <years-exp :years.sync="tech.years" :tech="tech.name"></years-exp>
             </template>
 
-            <hello-word></hello-word>
-
             <hr>
             <button type="submit" class="btn btn-primary float-right">Registrate</button>
             <button type="submit" class="btn btn-primary float-right" @click.prevent="signUp(true)">
                 Registrate y sal del sistema
             </button>
         </form>
-        <hr>
 
+        <h3>Experiencia en Front: </h3>
+        <ul v-for="tech in techs | orderBy 'years' -1 | years | front">
+            <li>{{ tech.name }}</li>
+        </ul>
+
+        <h3>Experiencia en Back: </h3>
+        <ul v-for="tech in techs | orderBy 'years' -1 | years | back">
+            <li>{{ tech.name }}</li>
+        </ul>
+
+        <hr>
         <div class="well"><pre>{{ $data | json}}</pre></div>
     </div>
 
@@ -67,10 +75,41 @@
         </p>
     </script>
 
+    <script type="text/template" id="techs_template">
+        <h3>Experiencia en {{ type }}: </h3>
+        <ul v-for="tech in techs | orderBy 'years' -1 | years | {{ filter }}">
+            <li>{{ tech.name }}</li>
+        </ul>
+    </script>
+
     <script>
 
         Vue.component('hello-word', {
             template: '<h2>Hola mundo</h2>'
+        });
+
+        Vue.filter('ucwords', function(value){
+            return value.split(' ').map(function(word){
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }).join(' ');
+        });
+
+        Vue.filter('back', function(techs){
+            return techs.filter(function(tech){
+                return tech.type === 'backend';
+            });
+        });
+
+        Vue.filter('front', function(techs){
+            return techs.filter(function(tech){
+                return tech.type === 'frontend';
+            });
+        });
+
+        Vue.filter('years', function(techs){
+            return techs.filter(function(tech){
+                return tech.years > 0;
+            });
         });
 
         Vue.component('years-exp', {
@@ -93,7 +132,8 @@
 
                 }
             }
-        })
+        });
+
 
         new Vue({
             el: "#container",
@@ -104,9 +144,11 @@
                 years_php: 0,
                 years_js: 0,
                 techs: [
-                    { name : 'HTML', years: 0},
-                    { name : 'JS', years: 0},
-                    { name : 'PHP', years: 0},
+                    { name : 'HTML', years: 0, type: 'frontend'},
+                    { name : 'JS', years: 0, type: 'frontend'},
+                    { name : 'CSS', years: 0, type: 'frontend'},
+                    { name : 'MySQL', years: 0, type: 'backend'},
+                    { name : 'PHP', years: 0, type: 'backend'},
                 ],
                 spanish : true
             },
