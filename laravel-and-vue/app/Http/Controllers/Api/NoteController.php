@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Category;
 use App\Note;
 use Illuminate\Http\Request;
 
@@ -83,6 +84,17 @@ class NoteController extends Controller
         $note->delete();
         return [
             'success' => true,
+        ];
+    }
+
+    public function listNotesAndCategories()
+    {
+        $notes = Note::all();
+        $categories = Category::all();
+
+        return [
+            'success' => true,
+            'data' => compact('notes', 'categories')
         ];
     }
 }

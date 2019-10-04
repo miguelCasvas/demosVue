@@ -11,6 +11,24 @@ class ApiNoteTest extends TestCase
 
     private $note = 'This is a note';
 
+    public function test_list_notes_and_list_categories()
+    {
+        $category = factory(Category::class)->create();
+        $notes = factory(Note::class)->times(2)->create([
+            'category_id' => $category->id
+        ]);
+
+        $this->get('api/v1/lists-notes-and-categories')
+            ->assertResponseStatus(200)
+            ->seeJsonEquals([
+                'success' => true,
+                'data' => [
+                    'notes' => Note::all()->toArray(),
+                    'categories' => Category::all()->toArray()
+                ]
+            ]);
+    }
+    
     public function test_list_notes()
     {
 

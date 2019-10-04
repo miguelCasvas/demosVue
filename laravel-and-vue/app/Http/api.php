@@ -6,3 +6,4 @@ Route::resource('notes', 'NoteController', [
     ]
 ]);
 
+Route::get('lists-notes-and-categories', 'NoteController@listNotesAndCategories');
