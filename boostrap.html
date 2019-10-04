@@ -42,13 +42,13 @@
         </form>
 
         <h3>Experiencia en Front: </h3>
-        <ul v-for="tech in techs | orderBy 'years' -1 | years | front">
-            <li>{{ tech.name }}</li>
+        <ul>
+            <li v-for="tech in techs | orderBy 'years' -1 | years | front">{{ tech.name }}</li>
         </ul>
 
         <h3>Experiencia en Back: </h3>
-        <ul v-for="tech in techs | orderBy 'years' -1 | years | back">
-            <li>{{ tech.name }}</li>
+        <ul>
+            <li v-for="tech in techs | orderBy 'years' -1 | years | back">{{ tech.name }}</li>
         </ul>
 
         <hr>
