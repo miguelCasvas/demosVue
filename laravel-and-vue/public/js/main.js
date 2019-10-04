@@ -52,7 +52,8 @@ var vm = new Vue({
             {id: 1, name: 'Laravel'},
             {id: 2, name: 'Vue.js'},
             {id: 3, name: 'Publicidad'},
-        ]
+        ],
+        errors: []
     },
     filters : { },
     ready: function (){
@@ -67,7 +68,22 @@ var vm = new Vue({
     },
     methods: {
         createNote: function(){
-            this.notes.push(this.new_note);
+
+            this.errors = [];
+
+            $.ajax({
+                url : '/api/v1/notes',
+                method: 'POST',
+                data: this.new_note,
+                dataType : 'json',
+                success : function(response){
+                    vm.notes.push(response.note);
+                },
+                error: function(jqXHR){
+                    vm.errors = jqXHR.responseJSON.errors;
+                }
+            });
+
             this.new_note = { note: '', category_id : ''};
         }
     }
