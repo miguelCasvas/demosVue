@@ -61,19 +61,28 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Note $note)
     {
-        //
+        $this->validate($request, [
+            'note' => 'required',
+            'category_id' => 'exists:categories,id'
+        ]);
+
+        $note->fill($request->all());
+        $note->save();
+
+        return [
+            'success' => true,
+            'note' => $note
+        ];
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Note $note)
     {
         //
+        $note->delete();
+        return [
+            'success' => true,
+        ];
     }
 }
