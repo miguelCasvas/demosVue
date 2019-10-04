@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="vue1.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <br>
+    <div id="container" class="container">
+
+        <template v-if="name">
+            <h1>{{ welcome_message }}, {{ name }}</h1>
+            <hr>
+        </template>
+
+        <form action="" @submit.prevent="signUp(false)">
+
+            <label for="">Genero</label>
+            <select name="" v-model="gender" class="form-control">
+                <option value="m">Masculino</option>
+                <option value="f">Femenino</option>
+            </select><br>
+            <label> ¿Habla español ? <input type="checkbox" v-model="spanish"></label><br>
+            <input type="text" v-model="first_name" class="form-control" placeholder="Nombres">
+            <br>
+            <p v-if=" name == ''" class="alert alert-danger"> Por favor ingrese el nombre </p>
+            <p v-if=" name.length < 2" class="alert alert-warning"> Nombre incorrecto </p>
+
+            <input type="text" v-model="last_name" class="form-control" placeholder="Apellidos"><br>
+
+
+            <template v-for="tech in techs">
+                <years-exp :years.sync="tech.years" :tech="tech.name"></years-exp>
+            </template>
+
+            <hello-word></hello-word>
+
+            <hr>
+            <button type="submit" class="btn btn-primary float-right">Registrate</button>
+            <button type="submit" class="btn btn-primary float-right" @click.prevent="signUp(true)">
+                Registrate y sal del sistema
+            </button>
+        </form>
+        <hr>
+
+        <div class="well"><pre>{{ $data | json}}</pre></div>
+    </div>
+
+    <!--    https://styde.net/computed-properties-en-vue-js/ -->
+    <!--    PLANTILLAS USADAS POR VUE.JS -->
+    <script type="text/template" id="years_template">
+
+        <p>
+            ¿ Cuantos años de experiencia tiene con {{ tech }}?  R:// {{ years }}
+            <button
+                    type="button"
+                    class="btn"
+                    @click="add">+</button>
+            <button
+                    type="button"
+                    :disabled="years == 0"
+                    class="btn"
+                    @click="sub">-</button>
+
+            <span class="label label-info">{{ experienceLevel }}</span>
+        </p>
+    </script>
+
+    <script>
+
+        Vue.component('hello-word', {
+            template: '<h2>Hola mundo</h2>'
+        });
+
+        Vue.component('years-exp', {
+            template: '#years_template',
+            methods: {
+                add: function(){
+                    this.years++;
+                },
+                sub: function () {
+                    this.years--;
+                }
+            },
+            props: ['years', 'tech'],
+            computed: {
+                experienceLevel: function(){
+
+                    if (this.years > 5) return 'Experto';
+                    else if (this.years > 2) return 'Intermedio';
+                    else return 'Principiante';
+
+                }
+            }
+        })
+
+        new Vue({
+            el: "#container",
+            data: {
+                first_name: '',
+                last_name: '',
+                gender: 'm',
+                years_php: 0,
+                years_js: 0,
+                techs: [
+                    { name : 'HTML', years: 0},
+                    { name : 'JS', years: 0},
+                    { name : 'PHP', years: 0},
+                ],
+                spanish : true
+            },
+            computed: {
+              welcome_message: function(){
+
+                  if (this.spanish)
+                    return this.gender == 'm' ? 'Bienvenido' : 'Bienvenida';
+
+                  return 'Welcome';
+              },
+              name: function () {
+
+                  if (this.first_name || this.last_name)
+                    return this.first_name + ' ' + this.last_name;
+
+                  return '';
+              }
+
+            },
+            methods: {
+                signUp : function( logout ){
+
+                    alert(this.name);
+
+                    if (logout)
+                        alert(' Y salgo');
+
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
